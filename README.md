@@ -1,9 +1,6 @@
 # EvolvedTrinityGuard
 TrinityGuard application
 
-
-This project was originally created by Viggo Lundén(viggo.lunden@gmail.com). 
-
 This project aims to create a full management tool for a TrinityCore server.
 It hides the console for the Game and Authentication server.
 
