@@ -13,5 +13,6 @@ namespace pryEvolvedTrinityGuard.Classes
         public int Gema2 { get; set; }
         public int Gema3 { get; set; }
         public int Cantidad { get; set; }
+        public string Name { get; set; }
     }
 }

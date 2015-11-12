@@ -13,15 +13,18 @@ namespace pryEvolvedTrinityGuard.Classes
         public MySqlConnection charconn = null;
         public MySqlConnection worldconn = null;
         public MySqlConnection authconn = null;
+        public MySqlConnection evolvedconn = null;
 
         public Connection()
         {
             charconn = new MySqlConnection("server=" + ConfigurationSettings.AppSettings["Host"].ToString() + ";uid=" + ConfigurationSettings.AppSettings["User"].ToString() + "; pwd=" + ConfigurationSettings.AppSettings["Pass"].ToString() + "; port=" + ConfigurationSettings.AppSettings["Port"].ToString() + "; database=" + ConfigurationSettings.AppSettings["CharDB"].ToString() + "; pooling=false;default command timeout=5;");
-            worldconn = new MySqlConnection("server=" + ConfigurationSettings.AppSettings["Host"].ToString() + ";uid=" + ConfigurationSettings.AppSettings["User"].ToString() + "; pwd=" + ConfigurationSettings.AppSettings["Pass"].ToString() + "; port=" + ConfigurationSettings.AppSettings["Port"].ToString() + "; database=" + ConfigurationSettings.AppSettings["CharDB"].ToString() + "; pooling=false;default command timeout=5;");
-            authconn = new MySqlConnection("server=" + ConfigurationSettings.AppSettings["Host"].ToString() + ";uid=" + ConfigurationSettings.AppSettings["User"].ToString() + "; pwd=" + ConfigurationSettings.AppSettings["Pass"].ToString() + "; port=" + ConfigurationSettings.AppSettings["Port"].ToString() + "; database=" + ConfigurationSettings.AppSettings["CharDB"].ToString() + "; pooling=false;default command timeout=5;");
+            worldconn = new MySqlConnection("server=" + ConfigurationSettings.AppSettings["Host"].ToString() + ";uid=" + ConfigurationSettings.AppSettings["User"].ToString() + "; pwd=" + ConfigurationSettings.AppSettings["Pass"].ToString() + "; port=" + ConfigurationSettings.AppSettings["Port"].ToString() + "; database=" + ConfigurationSettings.AppSettings["WorldDB"].ToString() + "; pooling=false;default command timeout=5;");
+            authconn = new MySqlConnection("server=" + ConfigurationSettings.AppSettings["Host"].ToString() + ";uid=" + ConfigurationSettings.AppSettings["User"].ToString() + "; pwd=" + ConfigurationSettings.AppSettings["Pass"].ToString() + "; port=" + ConfigurationSettings.AppSettings["Port"].ToString() + "; database=" + ConfigurationSettings.AppSettings["AuthDB"].ToString() + "; pooling=false;default command timeout=5;");
+            evolvedconn = new MySqlConnection("server=" + ConfigurationSettings.AppSettings["Host"].ToString() + ";uid=" + ConfigurationSettings.AppSettings["User"].ToString() + "; pwd=" + ConfigurationSettings.AppSettings["Pass"].ToString() + "; port=" + ConfigurationSettings.AppSettings["Port"].ToString() + "; database=" + ConfigurationSettings.AppSettings["EvolvedTrinityDb"].ToString() + "; pooling=false;default command timeout=5;");
             charconn.Open();
             worldconn.Open();
             authconn.Open();
+            evolvedconn.Open();
         }
 
 

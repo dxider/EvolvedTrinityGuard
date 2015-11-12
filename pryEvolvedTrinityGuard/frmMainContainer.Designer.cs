@@ -583,6 +583,7 @@
             this.fswMonitor.Filter = "*.out";
             this.fswMonitor.Path = "C:\\Users\\Ing.Isaac\\Documents\\decoder\\WoWReanMigrador_53A09\\output";
             this.fswMonitor.SynchronizingObject = this;
+            this.fswMonitor.Changed += new System.IO.FileSystemEventHandler(this.fswMonitor_Changed);
             this.fswMonitor.Created += new System.IO.FileSystemEventHandler(this.fswMonitor_Created);
             // 
             // fswInput
@@ -591,6 +592,7 @@
             this.fswInput.Filter = "*.lua";
             this.fswInput.Path = "C:\\Users\\Ing.Isaac\\Documents\\decoder\\WoWReanMigrador_53A09\\files";
             this.fswInput.SynchronizingObject = this;
+            this.fswInput.Changed += new System.IO.FileSystemEventHandler(this.fswInput_Changed);
             this.fswInput.Created += new System.IO.FileSystemEventHandler(this.fswInput_Created);
             // 
             // splitContainer1

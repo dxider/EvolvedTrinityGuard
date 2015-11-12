@@ -166,125 +166,155 @@ namespace pryEvolvedTrinityGuard
             int inicio = texto.IndexOf("\"");
             int fin = texto.IndexOf("\n");
             string valores;
-            valores = texto;//.Substring(inicio, fin - inicio);
-            //valores = valores.Substring(1);
-            //valores = valores.Substring(0, valores.Length - 2);
+            valores = texto;
+            int charguid;
             valores = valores.Replace("\\\"", "\"");
 
             JsonObject jso = JsonObject.Parse(valores);
-
+            JsonObject items;
             // Parsing the items
+
             JsonElement js = jso.GetElementByKey("items");
-            JsonObject items = (JsonObject)js.Value;
-            elementos.Clear();
-            foreach (JsonElement j in items)
-            {
-                Item it = new Item();
-                JsonObject propiedades = (JsonObject)j.Value;
-                it.ID = int.Parse(propiedades.GetElementByKey("I").Value.ToString());
-                it.Slot = int.Parse(propiedades.GetElementByKey("S").Value.ToString());
-                it.Bolsa = int.Parse(propiedades.GetElementByKey("B").Value.ToString());
-                it.Gema1 = int.Parse(propiedades.GetElementByKey("G1").Value.ToString());
-                it.Gema2 = int.Parse(propiedades.GetElementByKey("G2").Value.ToString());
-                it.Gema3 = int.Parse(propiedades.GetElementByKey("G3").Value.ToString());
-                it.Cantidad = int.Parse(propiedades.GetElementByKey("C").Value.ToString());
-                elementos.Add(it);
+            if(js.Value.ToString()!="[]")
+            { 
+                items = (JsonObject)js.Value;
+                elementos.Clear();
+                foreach (JsonElement j in items)
+                {
+                    Item it = new Item();
+                    JsonObject propiedades = (JsonObject)j.Value;
+                    it.ID = int.Parse(propiedades.GetElementByKey("I").Value.ToString());
+                    it.Slot = int.Parse(propiedades.GetElementByKey("S").Value.ToString());
+                    it.Bolsa = int.Parse(propiedades.GetElementByKey("B").Value.ToString());
+                    it.Gema1 = int.Parse(propiedades.GetElementByKey("G1").Value.ToString());
+                    it.Gema2 = int.Parse(propiedades.GetElementByKey("G2").Value.ToString());
+                    it.Gema3 = int.Parse(propiedades.GetElementByKey("G3").Value.ToString());
+                    it.Cantidad = int.Parse(propiedades.GetElementByKey("C").Value.ToString());
+                    elementos.Add(it);
+                }
             }
 
             // Parsing Equipment
             JsonElement jse = jso.GetElementByKey("equipo");
-            items = (JsonObject)jse.Value;
-            equipamento.Clear();
-            foreach (JsonElement j in items)
+            if(jse.Value.ToString()!="[]")
             {
-                Equipo it = new Equipo();
-                JsonObject propiedades = (JsonObject)j.Value;
-                it.ID = int.Parse(propiedades.GetElementByKey("I").Value.ToString());
-                it.Gema1 = int.Parse(propiedades.GetElementByKey("G1").Value.ToString());
-                it.Gema2 = int.Parse(propiedades.GetElementByKey("G2").Value.ToString());
-                it.Gema3 = int.Parse(propiedades.GetElementByKey("G3").Value.ToString());
-                it.Cantidad = int.Parse(propiedades.GetElementByKey("C").Value.ToString());
-                equipamento.Add(it);
-                //monturas
+                items = (JsonObject)jse.Value;
+                equipamento.Clear();
+                foreach (JsonElement j in items)
+                {
+                    Equipo it = new Equipo();
+                    JsonObject propiedades = (JsonObject)j.Value;
+                    it.ID = int.Parse(propiedades.GetElementByKey("I").Value.ToString());
+                    it.Gema1 = int.Parse(propiedades.GetElementByKey("G1").Value.ToString());
+                    it.Gema2 = int.Parse(propiedades.GetElementByKey("G2").Value.ToString());
+                    it.Gema3 = int.Parse(propiedades.GetElementByKey("G3").Value.ToString());
+                    it.Cantidad = int.Parse(propiedades.GetElementByKey("C").Value.ToString());
+                    if (it.Cantidad == 0)
+                        it.Cantidad++;
+                    it.Name = GetGearName(it.ID);
+                    equipamento.Add(it);
+                    //monturas
+                }
             }
+            
 
             // Parsing Equipment
             jse = jso.GetElementByKey("monturas");
-            items = (JsonObject)jse.Value;
-            monturas.Clear();
-            foreach (JsonElement j in items)
-            {
-                Montura it = new Montura();
-                it.ID = int.Parse(j.Value.ToString());
-                monturas.Add(it);
-                //monturas
+            if (jse.Value.ToString() != "[]")
+            { 
+                items = (JsonObject)jse.Value;
+                monturas.Clear();
+                foreach (JsonElement j in items)
+                {
+                    Montura it = new Montura();
+                    it.ID = int.Parse(j.Value.ToString());
+                    monturas.Add(it);
+                    //monturas
+                }
             }
 
             JsonElement obc = jso.GetElementByKey("creaturas");
-            JsonArray ja5 = (JsonArray)obc.Value;
-            creaturas.Clear();
-            for (int n = 0; n < ja5.Count; n++)
+            if (obc.Value.ToString() != "[]")
             {
-                Creatura it = new Creatura();
-                JsonObject propiedades = (JsonObject)ja5[n];
-                it.ID = int.Parse(ja5[n].ToString());
-                creaturas.Add(it);
-                //monturas
+                items= (JsonObject)obc.Value;
+                creaturas.Clear();
+                foreach (JsonElement j in items)
+                {
+                    Creatura it = new Creatura();
+                    it.ID = int.Parse(j.Value.ToString());
+                    creaturas.Add(it);
+                }
             }
-            //creaturas
             jse = jso.GetElementByKey("spells");
-            items = (JsonObject)jse.Value;
-            conjuros.Clear();
-            foreach (JsonElement j in items)
-            {
-                Spell it = new Spell();
-                JsonObject propiedades = (JsonObject)j.Value;
-                it.Book = int.Parse(propiedades.GetElementByKey("ID").Value.ToString());
-                it.SpellId = int.Parse(propiedades.GetElementByKey("S").Value.ToString());
-                conjuros.Add(it);
+            if (jse.Value.ToString() != "[]")
+            { 
+                items = (JsonObject)jse.Value;
+                conjuros.Clear();
+                foreach (JsonElement j in items)
+                {
+                    Spell it = new Spell();
+                    JsonObject propiedades = (JsonObject)j.Value;
+                    it.Book = int.Parse(propiedades.GetElementByKey("ID").Value.ToString());
+                    it.SpellId = int.Parse(propiedades.GetElementByKey("S").Value.ToString());
+                    conjuros.Add(it);
+                }
             }
 
             JsonElement ob = jso.GetElementByKey("skills");
-            JsonArray ja = (JsonArray)ob.Value;
-            skills.Clear();
-            for (int k = 0; k < ja.Count; k++)
-            {
-                Skill it = new Skill();
-                JsonObject propiedades = (JsonObject)ja[k];
-                it.MaxRank = int.Parse(propiedades.GetElementByKey("M").Value.ToString());
-                it.Rank = int.Parse(propiedades.GetElementByKey("C").Value.ToString());
-                it.Name = propiedades.GetElementByKey("N").Value.ToString();
-                skills.Add(it);
+            if (ob.Value.ToString() != "[]")
+            { 
+                JsonArray ja = (JsonArray)ob.Value;
+                skills.Clear();
+                for (int k = 0; k < ja.Count; k++)
+                {
+                    Skill it = new Skill();
+                    JsonObject propiedades = (JsonObject)ja[k];
+                    it.MaxRank = int.Parse(propiedades.GetElementByKey("M").Value.ToString());
+                    it.Rank = int.Parse(propiedades.GetElementByKey("C").Value.ToString());
+                    it.Name = propiedades.GetElementByKey("N").Value.ToString();
+                    skills.Add(it);
+                }
             }
 
             JsonElement achi = jso.GetElementByKey("achiev");
-            JsonArray ja2 = (JsonArray)achi.Value;
-            logros.Clear();
-            for (int k = 0; k < ja2.Count; k++)
-            {
-                Logro it = new Logro();
-                JsonObject propiedades = (JsonObject)ja2[k];
-                it.Id = int.Parse(propiedades.GetElementByKey("I").Value.ToString());
-                it.Posix = int.Parse(propiedades.GetElementByKey("D").Value.ToString());
-                logros.Add(it);
+            if (achi.Value.ToString() != "[]")
+            { 
+                JsonArray ja2 = (JsonArray)achi.Value;
+                logros.Clear();
+                for (int k = 0; k < ja2.Count; k++)
+                {
+                    Logro it = new Logro();
+                    JsonObject propiedades = (JsonObject)ja2[k];
+                    it.Id = int.Parse(propiedades.GetElementByKey("I").Value.ToString());
+                    it.Posix = int.Parse(propiedades.GetElementByKey("D").Value.ToString());
+                    logros.Add(it);
+                }
             }
 
+            JsonElement glyphs = jso.GetElementByKey("glyphs");
+            string[] glypslist = glyphs.ToString().Substring(glyphs.ToString().IndexOf(':') + 1).Trim().Replace("[", "").Replace("]", "").Split(',');
+            
+
             JsonElement curr = jso.GetElementByKey("currency");
-            JsonArray ja3 = (JsonArray)curr.Value;
-            monedas.Clear();
-            for (int l = 0; l < ja3.Count; l++)
-            {
-                Currency it = new Currency();
-                JsonObject propiedades = (JsonObject)ja3[l];
-                it.Id = int.Parse(propiedades.GetElementByKey("I").Value.ToString());
-                it.Cantidad = int.Parse(propiedades.GetElementByKey("C").Value.ToString());
-                monedas.Add(it);
+            if (curr.Value.ToString() != "[]")
+            { 
+                JsonArray ja3 = (JsonArray)curr.Value;
+                monedas.Clear();
+                for (int l = 0; l < ja3.Count; l++)
+                {
+                    Currency it = new Currency();
+                    JsonObject propiedades = (JsonObject)ja3[l];
+                    it.Id = int.Parse(propiedades.GetElementByKey("I").Value.ToString());
+                    it.Cantidad = int.Parse(propiedades.GetElementByKey("C").Value.ToString());
+                    monedas.Add(it);
+                }
             }
             jse = jso.GetElementByKey("uinf");
             items = (JsonObject)jse.Value;
 
             inf.Arena = int.Parse(items.GetElementByKey("arenapoints").Value.ToString());
             inf.Nombre = items.GetElementByKey("name").Value.ToString();
+            charguid= GetCharGuid(inf.Nombre);
             inf.Clase = items.GetElementByKey("class").Value.ToString();
             inf.Nivel = int.Parse(items.GetElementByKey("level").Value.ToString());
             inf.Raza = items.GetElementByKey("race").Value.ToString();
@@ -314,6 +344,12 @@ namespace pryEvolvedTrinityGuard
                 it.Nombre = propiedades.GetElementByKey("N").Value.ToString();
                 reputaciones.Add(it);
             }
+            
+            txtLog.Text += Environment.NewLine + "Iniciando el proceso de migración de [" + inf.Nombre + "](" + charguid.ToString() + ").";
+            txtLog.Text += Environment.NewLine + "Expulsando al jugador " + inf.Nombre + " en caso de estar Online por el proceso de migración.";
+            Sandbox.SendCommand("kick " + inf.Nombre);
+            
+            txtLog.Text += Environment.NewLine + "Restaurando items a [" + inf.Nombre + "].";
             string command = "send items " + inf.Nombre + " \"Migracion de personaje\" \"Se envia este correo como parte de los item que se restauraran a su cuenta por el proceso de migracion\" ";
             string cadenaitems=string.Empty;
             List<string> cadenas = new List<string>();
@@ -332,40 +368,368 @@ namespace pryEvolvedTrinityGuard
                 }
             }
             cadenas.Add(cadenaitems);
-            //foreach(string cadena in cadenas)
-            //{
-            //    Sandbox.SendCommand(command + cadena);
-            //    txtLog.Text += Environment.NewLine + "Enviando items a " + inf.Nombre + " por el proceso de migración de cuentas. Los items son: " + cadena;
-            //    System.Threading.Thread.Sleep(500);
-            //}
-            //Sandbox.SendCommand("character level " + inf.Nombre + " " + inf.Nivel);
-            //txtLog.Text += Environment.NewLine + "Estableciendo el nivel de " + inf.Nombre + " en " + inf.Nivel + " de acuerdo al proceso de migración.";
-            //SendGold(inf.Money, inf.Nombre);
-            Sandbox.SendCommand("kick " + inf.Nombre);
-            //txtLog.Text += Environment.NewLine + "Expulsando al jugador " + inf.Nombre + " en caso de estar Online por el proceso de migración.";
-
-
-            foreach (Montura monta in monturas)
+            foreach (string cadena in cadenas)
             {
-                Sandbox.SendCommand("learn " + monta.ID.ToString());
+                Sandbox.SendCommand(command + cadena);
+                txtLog.Text += Environment.NewLine + "Enviando los items : " + cadena;
+                System.Threading.Thread.Sleep(500);
             }
 
-            command = "send items " + inf.Nombre + " \"Migracion de personaje\" \"Se envia este correo como parte de la restauracion de los puntos de Honor.\" ";
-            Sandbox.SendCommand(command + "54637" + ":" + ((inf.Honor /555)+1).ToString());
+            ////////////////////////////
+
+            txtLog.Text += Environment.NewLine + "Restaurando gear a [" + inf.Nombre + "].";
+            command = "send items " + inf.Nombre + " \"Migracion de personaje\" \"Se envia este correo como parte del gear que se restaurará a su cuenta por el proceso de migracion\" ";
+            cadenaitems = string.Empty;
+            cadenas = new List<string>();
+            List<string> nombres = new List<string>();
+            string cadenanombres = string.Empty;
+            contador = 0;
+            foreach (Equipo gear in equipamento)
+            {
+                if (cadenaitems.Length == 0)
+                {
+                    if(!gear.Name.ToLower().Contains("quiver"))
+                    { 
+                        cadenaitems = gear.ID + ":" + gear.Cantidad;
+                        cadenanombres = gear.Name;
+                        contador++;
+                    }
+                }
+                    
+                else
+                {
+                    if(!gear.Name.ToLower().Contains("quiver"))
+                    {
+                        cadenaitems += " " + gear.ID + ":" + gear.Cantidad;
+                        cadenanombres += ", " + gear.Name;
+                        contador++;
+                    }
+                }
+                    
+                
+                if (contador % 12 == 0)
+                {
+                    cadenas.Add(cadenaitems);
+                    nombres.Add(cadenanombres);
+                    cadenanombres = string.Empty;
+                    cadenaitems = string.Empty;
+                }
+            }
+            cadenas.Add(cadenaitems);
+            nombres.Add(cadenanombres);
+            int ncontador = 0;
+            foreach (string cadena in cadenas)
+            {
+                Sandbox.SendCommand(command + cadena);
+                txtLog.Text += Environment.NewLine + "Enviando el gear : " + nombres[ncontador];
+                ncontador++;
+                System.Threading.Thread.Sleep(25);
+            }
+
+            ////////////////////////////
+            txtLog.Text += Environment.NewLine + "Estableciendo el nivel de " + inf.Nombre + " en " + inf.Nivel + " de acuerdo al proceso de migración.";
+            Sandbox.SendCommand("character level " + inf.Nombre + " " + inf.Nivel);
+
+            txtLog.Text += Environment.NewLine + "Enviando oro a [" + inf.Nombre + "] = " + inf.Money.ToString() + "C.";
+            SendGold(inf.Money, inf.Nombre);
+
+            System.Threading.Thread.Sleep(500);
+            txtLog.Text += Environment.NewLine + "Enviando monturas a [" + inf.Nombre + "] de acuerdo al proceso de migración.";
+            List<String> mountlist= GetMounts(monturas);
+            command = "send items " + inf.Nombre + " \"Migracion de personaje\" \"Se envia este correo como parte de la restauracion de las monturas.\" ";
+            string sublist = string.Empty;
+            for (int i = 0; i < mountlist.Count;i++ )
+            {
+                if(i==0)
+                {
+                    sublist = mountlist[i] + ":1";
+                }
+                else
+                {
+                    if(i%12!=0)
+                    {
+                        sublist += " " + mountlist[i] + ":1";
+                    }
+                    else
+                    {
+                        Sandbox.SendCommand(command + sublist);
+                        sublist = mountlist[i] + ":1";
+                    }
+                }
+                if(i==mountlist.Count -1)
+                    Sandbox.SendCommand(command + sublist);
+            }
+            /////////////////////
+            System.Threading.Thread.Sleep(250);
+            txtLog.Text += Environment.NewLine + "Enviando mascotas a [" + inf.Nombre + "] de acuerdo al proceso de migración.";
+            List<String> critterlist = GetCritters(creaturas);
+            command = "send items " + inf.Nombre + " \"Migracion de personaje\" \"Se envia este correo como parte de la restauracion de las monturas.\" ";
+            sublist = string.Empty;
+            for (int i = 0; i < critterlist.Count; i++)
+            {
+                if (i == 0)
+                {
+                    sublist = critterlist[i] + ":1";
+                }
+                else
+                {
+                    if (i % 12 != 0)
+                    {
+                        sublist += " " + critterlist[i] + ":1";
+                    }
+                    else
+                    {
+                        Sandbox.SendCommand(command + sublist);
+                        sublist = critterlist[i] + ":1";
+                    }
+                }
+                if (i == critterlist.Count - 1)
+                    Sandbox.SendCommand(command + sublist);
+            }
+
+            ///////////////////////
             if(SendArenaHonor(inf.Nombre, inf.Honor, inf.Arena))
                 txtLog.Text += Environment.NewLine + "Puntos de Arena=" + inf.Arena.ToString() + "  y Honor=" + inf.Honor.ToString() + " de " + inf.Nombre + " restaurados de acuerdo al proceso de migración.";
             else
                 txtLog.Text += Environment.NewLine + "No se pudieron restaurar los puntos de arena y honor para el jugador " + inf.Nombre + "Arena=" + inf.Arena.ToString() + " Honor=" + inf.Honor.ToString() + ".";
-            //UPDATE characters.characters SET arenaPoints=500, totalHonorPoints=500 WHERE name='Magnum'
             
+
+            foreach(Logro achiv in logros)
+            {
+                Logro acvtmp = new Logro();
+                acvtmp.Id = achiv.Id;
+                acvtmp.Posix = achiv.Posix;
+                FillAchievement(ref acvtmp);
+                if (!HasAchievement(charguid, acvtmp.Id) && !acvtmp.Name.StartsWith("Realm First!"))
+                {
+                    SaveAchievement(charguid, acvtmp);
+                    txtLog.Text += Environment.NewLine + "Se restauró el logro " + acvtmp.Name + " para el jugador " + inf.Nombre + ".";
+                }
+                else
+                    txtLog.Text += Environment.NewLine + "No fue posible restaurar el logro " + acvtmp.Name + " para el jugador " + inf.Nombre + ".";
+            }
+
+            //////////////////////////////
+            command = "send items " + inf.Nombre + " \"Migracion de personaje\" \"Se envia este correo como parte de los tokens que se restauraran a su cuenta por el proceso de migracion\" ";
+            cadenaitems = string.Empty;
+            cadenas = new List<string>();
+            contador = 0;
+            foreach (Currency curre in monedas)
+            {
+                if (cadenaitems.Length == 0 && curre.Cantidad!=0)
+                {
+                    cadenaitems = curre.Id + ":" + curre.Cantidad;
+                    contador++;
+                }
+                else
+                {
+                    if (curre.Cantidad != 0)
+                    { 
+                        cadenaitems += " " + curre.Id + ":" + curre.Cantidad;
+                        contador++;
+                    }
+                }
+                if (contador % 12 == 0 && contador!=0)
+                {
+                    cadenas.Add(cadenaitems);
+                    cadenaitems = string.Empty;
+                }
+            }
+            cadenas.Add(cadenaitems);
+            foreach (string cadena in cadenas)
+            {
+                Sandbox.SendCommand(command + cadena);
+                txtLog.Text += Environment.NewLine + "Enviando las monedas: " + cadena;
+                System.Threading.Thread.Sleep(500);
+            }
+
+            ///////////////////
+            for (int gidx = 0; gidx < glypslist.Length; gidx++)
+            {
+                int glyphid = GetGlyphId(glypslist[gidx]);
+                SaveGlyph(gidx, glyphid, charguid);
+            }
+            
+        }
+
+        private void SaveAchievement(int charguid, Logro acv)
+        {
+            if (con.charconn.State == ConnectionState.Open)
+            {
+                MySqlCommand cmd = new MySqlCommand("INSERT INTO character_achievement VALUES (" + charguid + "," + acv.Id + "," + acv.Posix +")", con.charconn);
+                cmd.ExecuteNonQuery();
+                cmd.Dispose();
+            }
+        }
+
+        private bool HasAchievement(int charguid, int idacv)
+        {
+            bool ret =false;
+            if(con.charconn.State== ConnectionState.Open)
+            {
+                MySqlCommand cmd = new MySqlCommand("SELECT COUNT(*) FROM character_achievement WHERE achievement=" + idacv + " AND guid=" + charguid, con.charconn);
+                MySqlDataReader dr = cmd.ExecuteReader();
+                if(dr.Read())
+                {
+                    if(dr[0].ToString()!="0")
+                    {
+                        ret = true;
+                    }
+                }
+                dr.Close();
+                dr.Dispose();
+                cmd.Dispose();
+            }
+            return ret;
+        }
+
+        private void FillAchievement(ref Logro acvtmp)
+        {
+            if(con.evolvedconn.State== ConnectionState.Open)
+            {
+                MySqlCommand cmd = new MySqlCommand("SELECT * FROM achievements WHERE id=" + acvtmp.Id, con.evolvedconn);
+                MySqlDataReader dr = cmd.ExecuteReader();
+                if(dr.Read())
+                {
+                    acvtmp.Name = dr[1].ToString();
+                    acvtmp.Description = dr[2].ToString();
+                }
+                dr.Close();
+                dr.Dispose();
+                cmd.Dispose();
+            }
+        }
+
+        private void SaveGlyph(int gidx, int glyphid, int charguid)
+        {
+            if(con.charconn.State== ConnectionState.Open)
+            {
+                MySqlCommand cmd= null;
+                switch(gidx)
+                {
+                    case 0:
+                        cmd = new MySqlCommand("UPDATE character_glyphs set glyph1=" + glyphid.ToString() + " WHERE guid=" + charguid.ToString(), con.charconn);
+                        break;
+                    case 1:
+                        cmd = new MySqlCommand("UPDATE character_glyphs set glyph4=" + glyphid.ToString() + " WHERE guid=" + charguid.ToString(), con.charconn);
+                        break;
+                    case 2:
+                        cmd = new MySqlCommand("UPDATE character_glyphs set glyph6=" + glyphid.ToString() + " WHERE guid=" + charguid.ToString(), con.charconn);
+                        break;
+                    case 3:
+                        cmd = new MySqlCommand("UPDATE character_glyphs set glyph2=" + glyphid.ToString() + " WHERE guid=" + charguid.ToString(), con.charconn);
+                        break;
+                    case 4:
+                        cmd = new MySqlCommand("UPDATE character_glyphs set glyph3=" + glyphid.ToString() + " WHERE guid=" + charguid.ToString(), con.charconn);
+                        break;
+                    case 5:
+                        cmd = new MySqlCommand("UPDATE character_glyphs set glyph5=" + glyphid.ToString() + " WHERE guid=" + charguid.ToString(), con.charconn);
+                        break;
+                }
+                cmd.ExecuteNonQuery();
+                cmd.Dispose();
+                 
+            }
+        }
+
+        private int GetGlyphId(string glyph)
+        {
+            int ret = 0;
+            if(con.evolvedconn.State== ConnectionState.Open)
+            {
+                MySqlCommand com = new MySqlCommand("SELECT id FROM evolvedtrinityguard.glyphproperties where spellid=+" + glyph, con.evolvedconn);
+                MySqlDataReader dr = com.ExecuteReader();
+                if (dr.Read())
+                    ret = int.Parse(dr[0].ToString());
+                dr.Close();
+                dr.Dispose();
+                com.Dispose();
+            }
+            return ret;
+        }
+
+        private string GetGearName(int id)
+        {
+            string ret = string.Empty;
+            if(con.worldconn.State== ConnectionState.Open)
+            {
+                MySqlCommand com = new MySqlCommand("SELECT name FROM world.item_template where entry=" + id, con.worldconn);
+                MySqlDataReader dr = com.ExecuteReader();
+                if (dr.Read())
+                    ret = dr[0].ToString();
+                dr.Close();
+                dr.Dispose();
+                com.Dispose();
+            }
+            return ret;
+        }
+
+        private int GetCharGuid(string name)
+        {
+            int ret = 0;
+            if(con.charconn.State == ConnectionState.Open)
+            {
+                MySqlCommand com = new MySqlCommand("SELECT guid FROM characters where name='" + name + "'", con.charconn);
+                MySqlDataReader dr = com.ExecuteReader();
+                if (dr.Read())
+                    ret = int.Parse(dr[0].ToString());
+                dr.Close();
+                dr.Dispose();
+                com.Dispose();
+            }
+            return ret;
+        }
+
+        private List<String> GetMounts(List<Montura> monturas)
+        {
+            List<String> ret = new List<string>();
+            if (con.worldconn.State == ConnectionState.Open)
+            {
+                foreach(Montura m in monturas)
+                {
+                    MySqlCommand com = new MySqlCommand("SELECT entry FROM item_template where spellid_2=" + m.ID + " order by entry desc LIMIT 1", con.worldconn);
+                    MySqlDataReader dr = com.ExecuteReader();
+                    if(dr.Read())
+                    {
+                        ret.Add(dr[0].ToString());
+                    }
+                    dr.Close();
+                    dr.Dispose();
+                    com.Dispose();
+                }
+                
+            }
+            return ret;
+        }
+
+        private List<String> GetCritters(List<Creatura> creaturas)
+        {
+            List<String> ret = new List<string>();
+            if (con.worldconn.State == ConnectionState.Open)
+            {
+                foreach (Creatura c in creaturas)
+                {
+                    MySqlCommand com = new MySqlCommand("SELECT entry FROM item_template where spellid_2=" + c.ID + " order by entry desc LIMIT 1", con.worldconn);
+                    MySqlDataReader dr = com.ExecuteReader();
+                    if (dr.Read())
+                    {
+                        ret.Add(dr[0].ToString());
+                    }
+                    dr.Close();
+                    dr.Dispose();
+                    com.Dispose();
+                }
+
+            }
+            return ret;
         }
 
         private bool SendArenaHonor(string nombre, int honor, int arena)
         {
             bool ret = true;
             try
-            { 
-            MySqlCommand com = new MySqlCommand("UPDATE characters.characters SET arenaPoints=" + arena.ToString() + ", totalHonorPoints=" + honor.ToString() + " WHERE name='" + nombre + "')", con.charconn);
+            {
+                MySqlCommand com = new MySqlCommand("UPDATE characters.characters SET arenaPoints=arenaPoints+" + arena.ToString() + ", totalHonorPoints=totalHonorPoints+" + honor.ToString() + " WHERE name='" + nombre + "'", con.charconn);
             com.ExecuteNonQuery();
                 }
             catch(Exception ex)
@@ -462,6 +826,7 @@ namespace pryEvolvedTrinityGuard
             text = text.Substring(0, text.IndexOf("\n")-2).Trim();
             File.WriteAllText(e.FullPath, text);
             System.Diagnostics.Process.Start("C:\\Users\\Ing.Isaac\\Documents\\decoder\\WoWReanMigrador_53A09\\decode.bat");
+            System.Threading.Thread.Sleep(500);
             //System.Diagnostics.Process.Start("C:\\Program Files (x86)\\Lua\\5.1\\lua.exe", "C:\\Users\\Ing.Isaac\\Documents\\decoder\\WoWReanMigrador_53A09\\decode.luac");
 
             //// Prepare the process to run
@@ -489,6 +854,16 @@ namespace pryEvolvedTrinityGuard
         private void clearToolStripMenuItem_Click(object sender, EventArgs e)
         {
             txtLog.Text = string.Empty;
+        }
+
+        private void fswInput_Changed(object sender, FileSystemEventArgs e)
+        {
+
+        }
+
+        private void fswMonitor_Changed(object sender, FileSystemEventArgs e)
+        {
+
         }
 
     }
